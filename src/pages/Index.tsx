@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -9,6 +8,7 @@ import AlertBanner from '@/components/AlertBanner';
 import DetectionCard from '@/components/DetectionCard';
 import SanitizedOutput from '@/components/SanitizedOutput';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Scan } from 'lucide-react';
 
 const Index = () => {
   const [originalText, setOriginalText] = useState<string>('');
@@ -124,9 +124,22 @@ const Index = () => {
               <div className="mt-8 text-center">
                 <button 
                   onClick={() => setShowResults(false)} 
-                  className="text-primary hover:text-primary/80 hover:underline text-sm font-medium py-2 px-4 rounded-full bg-blue-50 dark:bg-blue-900/30 transition-colors"
+                  className="
+                    flex items-center justify-center 
+                    mx-auto 
+                    px-6 py-3 
+                    bg-primary 
+                    text-white 
+                    rounded-lg 
+                    shadow-md 
+                    hover:bg-primary/90 
+                    transition-colors 
+                    duration-300 
+                    group
+                  "
                 >
-                  Scan new content
+                  <Scan className="mr-2 size-5 group-hover:animate-pulse" />
+                  Scan New Content
                 </button>
               </div>
             </>
@@ -146,4 +159,3 @@ const Index = () => {
 };
 
 export default Index;
-
