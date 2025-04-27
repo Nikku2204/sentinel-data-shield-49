@@ -35,7 +35,7 @@ const Index = () => {
             <div className="flex items-center">
               <ShieldAlert className="text-primary h-8 w-8 mr-3" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Sentinel Data Shield</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">shareSafe</h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Protect sensitive data from AI exposure</p>
               </div>
             </div>
@@ -146,3 +146,4 @@ const Index = () => {
 };
 
 export default Index;
+
