@@ -1,4 +1,3 @@
-
 export interface Detection {
   id: string;
   type: 'api_key' | 'sql_query' | 'credential' | 'internal_domain' | 'proprietary';
@@ -11,9 +10,11 @@ export interface Detection {
 
 // Regular expressions for different types of sensitive information
 const PATTERNS = {
+  SSN: /\b\d{3}[-.]?\d{2}[-.]?\d{4}\b/g,
+  DOB: /\b(0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])[-/](19|20)\d{2}\b/g,
   API_KEY: /(?:api[_-]?key|access[_-]?token)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
   SQL_QUERY: /SELECT.+FROM.+WHERE|INSERT INTO.+VALUES|UPDATE.+SET.+WHERE|DELETE FROM.+WHERE/gi,
-  SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi, // Basic SQL injection pattern
+  SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi,
   CREDENTIAL: /(?:password|passwd|pwd|secret)[=:]\s*["']?([a-zA-Z0-9!@#$%^&*()_+]{8,})["']?/gi,
   INTERNAL_DOMAIN: /(?:internal|corp|intranet|private)\.[\w-]+\.[a-z]{2,}/gi,
   SECRET_KEY: /(?:secret[_-]?key|private[_-]?key)[=:]\s*["']?([a-zA-Z0-9-_=+/]{16,})["']?/gi,
@@ -42,17 +43,31 @@ export const scanForSensitiveData = (text: string): Detection[] => {
     });
   };
   
-  // Reset regex indices before scanning
-  PATTERNS.API_KEY.lastIndex = 0;
-  PATTERNS.SQL_QUERY.lastIndex = 0;
-  PATTERNS.SQL_INJECTION.lastIndex = 0;
-  PATTERNS.CREDENTIAL.lastIndex = 0;
-  PATTERNS.INTERNAL_DOMAIN.lastIndex = 0;
-  PATTERNS.SECRET_KEY.lastIndex = 0;
-  PATTERNS.PROPRIETARY_MARKER.lastIndex = 0;
+  // Reset all regex indices
+  Object.values(PATTERNS).forEach(pattern => pattern.lastIndex = 0);
   
-  // Check for API keys
+  // Check for SSN
   let match: RegExpExecArray | null;
+  while ((match = PATTERNS.SSN.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Social Security Numbers (SSN) are highly sensitive personal identifiers that should never be shared.'
+    );
+  }
+
+  // Check for DOB
+  while ((match = PATTERNS.DOB.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Dates of birth are sensitive personal information that could be used for identity theft.'
+    );
+  }
+
+  // Check for API keys
   while ((match = PATTERNS.API_KEY.exec(text)) !== null) {
     addDetection(
       'api_key',
