@@ -13,7 +13,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ riskLevel, detectionCount }) 
     safe: {
       icon: ShieldCheck,
       bg: 'bg-green-50',
-      border: 'border-green-200',
+      border: 'border-green-400/30',
       text: 'text-green-800',
       title: 'Content appears safe to share',
       description: 'No sensitive information detected in your content.'
@@ -21,7 +21,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ riskLevel, detectionCount }) 
     warning: {
       icon: AlertTriangle,
       bg: 'bg-yellow-50',
-      border: 'border-yellow-200',
+      border: 'border-yellow-400/30',
       text: 'text-yellow-800',
       title: 'Potential sensitive information detected',
       description: `${detectionCount} potential issue${detectionCount !== 1 ? 's' : ''} found that may need attention.`
@@ -29,7 +29,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ riskLevel, detectionCount }) 
     danger: {
       icon: ShieldX,
       bg: 'bg-red-50',
-      border: 'border-red-200',
+      border: 'border-red-400/30',
       text: 'text-red-800',
       title: 'High-risk content detected',
       description: `${detectionCount} critical issue${detectionCount !== 1 ? 's' : ''} found that should be addressed before sharing.`
@@ -41,17 +41,17 @@ const AlertBanner: React.FC<AlertBannerProps> = ({ riskLevel, detectionCount }) 
   
   return (
     <div className={cn(
-      'flex items-start p-4 mb-6 rounded-md border',
+      'flex items-start p-5 mb-6 rounded-xl border shadow-sm',
       config.bg,
       config.border,
       config.text
     )}>
-      <div className="mr-3 mt-0.5">
-        <Icon size={20} className={cn(config.text)} />
+      <div className="mr-4 mt-0.5 bg-white/50 p-2 rounded-full">
+        <Icon size={24} className={cn(config.text)} />
       </div>
       <div>
-        <h3 className="font-semibold mb-1">{config.title}</h3>
-        <p className="text-sm">{config.description}</p>
+        <h3 className="font-semibold text-lg mb-1">{config.title}</h3>
+        <p className="text-sm opacity-90">{config.description}</p>
       </div>
     </div>
   );
