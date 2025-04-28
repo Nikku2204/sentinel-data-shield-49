@@ -1,3 +1,4 @@
+
 export interface Detection {
   id: string;
   type: 'api_key' | 'sql_query' | 'credential' | 'internal_domain' | 'proprietary';
@@ -12,7 +13,8 @@ export interface Detection {
 const PATTERNS = {
   SSN: /\b\d{3}[-.]?\d{2}[-.]?\d{4}\b/g,
   DOB: /\b(0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])[-/](19|20)\d{2}\b/g,
-  API_KEY: /(?:api[_-]?key|access[_-]?token)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
+  API_KEY: /(?:api[_-]?key|access[_-]?token|secret|token|key)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
+  NAMED_API_KEY: /(?:\w+[_-]?(?:api|token|key))\s*[=:]\s*["']?([a-zA-Z0-9-_=+/]{8,})["']?/gi,
   SQL_QUERY: /SELECT.+FROM.+WHERE|INSERT INTO.+VALUES|UPDATE.+SET.+WHERE|DELETE FROM.+WHERE/gi,
   SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi,
   CREDENTIAL: /(?:password|passwd|pwd|secret)[=:]\s*["']?([a-zA-Z0-9!@#$%^&*()_+]{8,})["']?/gi,
@@ -74,6 +76,16 @@ export const scanForSensitiveData = (text: string): Detection[] => {
       match,
       'high',
       'API keys should never be shared with external services as they can grant access to your systems and data.'
+    );
+  }
+  
+  // Check for named API keys (like Google_API_key = xyz)
+  while ((match = PATTERNS.NAMED_API_KEY.exec(text)) !== null) {
+    addDetection(
+      'api_key',
+      match,
+      'high',
+      'Named API keys should never be shared as they can grant access to specific services and data.'
     );
   }
   
