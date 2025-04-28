@@ -46,18 +46,10 @@ const PATTERNS = {
   // Other Sensitive Data
   COORDINATES: /\b\d+\.\d+°\s*[NS],\s*\d+\.\d+°\s*[EW]\b/g,
   
-  // Updated SSN pattern to match formats like 012-123-2044
-  SSN: /\b(?:\d{3}-\d{2}-\d{4}|\d{3}[.-]?\d{2}[.-]?\d{4})\b/g,
-  
-  // Updated DOB pattern to match formats like 01/01/1999
+  // Date of Birth pattern
   DOB: /\b(?:0?[1-9]|1[0-2])[\/.-](0?[1-9]|[12]\d|3[01])[\/.-](?:19|20)\d{2}\b/g,
   
-  // Format like Google_API_key = 123n123hkasdf9195
-  API_KEY: /(?:api[_-]?key|access[_-]?token|secret|token|key)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
-  
-  // Improved pattern for named API keys with more flexible format matching
-  NAMED_API_KEY: /\b\w+(?:[_-]?(?:api|key|token|secret))\s*[=:]\s*["']?[a-zA-Z0-9_.-]{8,}["']?/gi,
-  
+  // SQL query detection
   SQL_QUERY: /SELECT.+FROM.+WHERE|INSERT INTO.+VALUES|UPDATE.+SET.+WHERE|DELETE FROM.+WHERE/gi,
   SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi,
   
