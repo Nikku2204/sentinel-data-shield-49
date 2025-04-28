@@ -12,7 +12,8 @@ export interface Detection {
 const PATTERNS = {
   // Personal Identifiers
   SSN: /\b(?:\d{3}-\d{2}-\d{4}|\d{3}[.-]?\d{2}[.-]?\d{4})\b/g,
-  DRIVERS_LICENSE: /\b[A-Z]\d{7}\b/g,
+  // Updated Driver's License pattern to match formats like D123-456-7890
+  DRIVERS_LICENSE: /\b(?:[A-Z]\d{7}|[A-Z]\d{3}-\d{3}-\d{4})\b/g,
   PASSPORT: /\b[A-Z]\d{8}\b/g,
   
   // Contact Information
@@ -71,6 +72,9 @@ const PATTERNS = {
   LABELED_SSN: /\b(?:ssn|social\s*security(?:\s*number)?)\s*:?\s*\d{3}-?\d{2}-?\d{4}\b/gi,
   LABELED_DOB: /\b(?:dob|date\s*of\s*birth|birth\s*date)\s*:?\s*(?:0?[1-9]|1[0-2])[\/.-](?:0?[1-9]|[12]\d|3[01])[\/.-](?:19|20)\d{2}\b/gi,
   PATIENT_INFO: /\b(?:patient\s*info|patient\s*information|medical\s*record)\b/gi,
+  
+  // License number with format like "License No.: D123-456-7890"
+  LICENSE_NO: /\b(?:License\s+No\.?|DL\s+Number):\s*[A-Z]\d{3}-\d{3}-\d{4}\b/gi,
 };
 
 // Detects if text contains sensitive information
@@ -356,6 +360,26 @@ export const scanForSensitiveData = (text: string): Detection[] => {
       match,
       'high',
       'NDA content is confidential and should not be shared.'
+    );
+  }
+  
+  // Check for License Number (new)
+  while ((match = PATTERNS.LICENSE_NO.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Driver\'s license numbers are sensitive personal identifiers that should not be shared.'
+    );
+  }
+
+  // Check for driver's license (updated to catch the new format)
+  while ((match = PATTERNS.DRIVERS_LICENSE.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Driver\'s license numbers are sensitive personal identifiers that should not be shared.'
     );
   }
   
