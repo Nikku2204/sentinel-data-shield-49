@@ -21,7 +21,7 @@ export const personalIdentifierPatterns: Record<string, PatternDefinition> = {
     explanation: 'Driver\'s license numbers are sensitive personal identifiers that should not be shared.'
   },
   LICENSE_NO: {
-    pattern: /\b(?:License\s+No\.?|DL\s+Number):\s*[A-Z]\d{3}-\d{3}-\d{4}\b/gi,
+    pattern: /\b(?:License(?:\s+No\.?| Number| #)|DL(?:\s+No\.?| Number| #)|Driver'?s License(?:\s+No\.?| Number| #))?:?\s*(?:[A-Z]\d{3}-\d{3}-\d{4}|\d{2,3}-\d{2,3}-\d{3,4}|[A-Z]{1,2}\d{5,8}|[A-Z]{1,2}-\d{3,8})\b/gi,
     type: 'credential',
     riskLevel: 'high',
     explanation: 'Driver\'s license numbers are sensitive personal identifiers that should not be shared.'
