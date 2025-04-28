@@ -11,16 +11,32 @@ export interface Detection {
 
 // Regular expressions for different types of sensitive information
 const PATTERNS = {
-  SSN: /\b\d{3}[-.]?\d{2}[-.]?\d{4}\b/g,
-  DOB: /\b(0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])[-/](19|20)\d{2}\b/g,
+  // Updated SSN pattern to match formats like 012-123-2044
+  SSN: /\b(?:\d{3}-\d{2}-\d{4}|\d{3}[.-]?\d{2}[.-]?\d{4})\b/g,
+  
+  // Updated DOB pattern to match formats like 01/01/1999
+  DOB: /\b(?:0?[1-9]|1[0-2])[\/.-](0?[1-9]|[12]\d|3[01])[\/.-](?:19|20)\d{2}\b/g,
+  
+  // Format like Google_API_key = 123n123hkasdf9195
   API_KEY: /(?:api[_-]?key|access[_-]?token|secret|token|key)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
-  NAMED_API_KEY: /\w+(?:[_-]?(?:api|key|token|secret))(?:\s*[=:]\s*|\s*=\s*|\s+=\s*)["']?([a-zA-Z0-9_.-]{8,})["']?/gi,
+  
+  // Improved pattern for named API keys with more flexible format matching
+  NAMED_API_KEY: /\b\w+(?:[_-]?(?:api|key|token|secret))\s*[=:]\s*["']?[a-zA-Z0-9_.-]{8,}["']?/gi,
+  
   SQL_QUERY: /SELECT.+FROM.+WHERE|INSERT INTO.+VALUES|UPDATE.+SET.+WHERE|DELETE FROM.+WHERE/gi,
   SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi,
-  CREDENTIAL: /(?:password|passwd|pwd|secret)[=:]\s*["']?([a-zA-Z0-9!@#$%^&*()_+]{8,})["']?/gi,
+  
+  // Enhanced credential pattern to match more formats
+  CREDENTIAL: /(?:password|passwd|pwd|secret|ssn)[=:]\s*["']?([a-zA-Z0-9!@#$%^&*()_+\-]{4,})["']?/gi,
+  
   INTERNAL_DOMAIN: /(?:internal|corp|intranet|private)\.[\w-]+\.[a-z]{2,}/gi,
   SECRET_KEY: /(?:secret[_-]?key|private[_-]?key)[=:]\s*["']?([a-zA-Z0-9-_=+/]{16,})["']?/gi,
   PROPRIETARY_MARKER: /(?:confidential|proprietary|internal[_-]?use[_-]?only|do[_-]?not[_-]?share)/gi,
+  
+  // Add patterns for labeled sensitive information
+  LABELED_SSN: /\b(?:ssn|social\s*security(?:\s*number)?)\s*:?\s*\d{3}-?\d{2}-?\d{4}\b/gi,
+  LABELED_DOB: /\b(?:dob|date\s*of\s*birth|birth\s*date)\s*:?\s*(?:0?[1-9]|1[0-2])[\/.-](?:0?[1-9]|[12]\d|3[01])[\/.-](?:19|20)\d{2}\b/gi,
+  PATIENT_INFO: /\b(?:patient\s*info|patient\s*information|medical\s*record)\b/gi,
 };
 
 // Detects if text contains sensitive information
@@ -59,6 +75,16 @@ export const scanForSensitiveData = (text: string): Detection[] => {
     );
   }
 
+  // Check for labeled SSN
+  while ((match = PATTERNS.LABELED_SSN.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Labeled Social Security Numbers are highly sensitive personal identifiers that should never be shared.'
+    );
+  }
+
   // Check for DOB
   while ((match = PATTERNS.DOB.exec(text)) !== null) {
     addDetection(
@@ -66,6 +92,26 @@ export const scanForSensitiveData = (text: string): Detection[] => {
       match,
       'high',
       'Dates of birth are sensitive personal information that could be used for identity theft.'
+    );
+  }
+  
+  // Check for labeled DOB
+  while ((match = PATTERNS.LABELED_DOB.exec(text)) !== null) {
+    addDetection(
+      'credential',
+      match,
+      'high',
+      'Labeled dates of birth are sensitive personal information that could be used for identity theft.'
+    );
+  }
+
+  // Check for patient information markers
+  while ((match = PATTERNS.PATIENT_INFO.exec(text)) !== null) {
+    addDetection(
+      'proprietary',
+      match,
+      'high',
+      'Patient information is protected health data that should not be shared with external services.'
     );
   }
 

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Shield, ShieldAlert } from "lucide-react";
 import { scanForSensitiveData, analyzeRiskLevel, Detection } from '@/utils/scanners';
+import { toast } from "@/hooks/use-toast";
 
 interface ScannerInputProps {
   onScanComplete: (text: string, detections: Detection[], riskLevel: 'safe' | 'warning' | 'danger') => void;
@@ -22,7 +23,18 @@ const ScannerInput: React.FC<ScannerInputProps> = ({ onScanComplete }) => {
     setTimeout(() => {
       const detections = scanForSensitiveData(text);
       const riskLevel = analyzeRiskLevel(detections);
+      
       onScanComplete(text, detections, riskLevel);
+      
+      // Show a toast message with the scan results
+      if (detections.length > 0) {
+        toast({
+          title: `${detections.length} sensitive items detected`,
+          description: `Risk level: ${riskLevel}`,
+          variant: riskLevel === 'danger' ? 'destructive' : 'default'
+        });
+      }
+      
       setIsScanning(false);
     }, 800);
   };
