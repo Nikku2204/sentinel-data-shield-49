@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/03d7bf51-e0e7-4c80-b339-bd4d12c31a39
+**URL**: https://sentinel-data-shield-49.lovable.app/
 
 <img width="1421" alt="Screenshot 2025-04-28 at 4 28 46 PM" src="https://github.com/user-attachments/assets/d2b6b5a5-1594-453d-9936-dbc568acf79c" />
 
