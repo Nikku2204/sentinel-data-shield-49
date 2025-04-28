@@ -4,6 +4,9 @@
 
 **URL**: https://lovable.dev/projects/03d7bf51-e0e7-4c80-b339-bd4d12c31a39
 
+<img width="1421" alt="Screenshot 2025-04-28 at 4 28 46 PM" src="https://github.com/user-attachments/assets/d2b6b5a5-1594-453d-9936-dbc568acf79c" />
+
+
 ## How can I edit this code?
 
 There are several ways of editing your application.
@@ -69,5 +72,6 @@ Simply open [Lovable](https://lovable.dev/projects/03d7bf51-e0e7-4c80-b339-bd4d1
 Yes, you can!
 
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+![Uploading Screenshot 2025-04-28 at 4.27.59 PM.png…]()
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
