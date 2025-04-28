@@ -10,7 +10,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/03d7bf51-e0e7-4c80-b339-bd4d12c31a39) and start prompting.
+Simply visit the [Lovable Project]([https://lovable.dev/projects/03d7bf51-e0e7-4c80-b339-bd4d12c31a39](https://sentinel-data-shield-49.lovable.app/)) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
