@@ -14,7 +14,7 @@ const PATTERNS = {
   SSN: /\b\d{3}[-.]?\d{2}[-.]?\d{4}\b/g,
   DOB: /\b(0[1-9]|1[0-2])[-/](0[1-9]|[12]\d|3[01])[-/](19|20)\d{2}\b/g,
   API_KEY: /(?:api[_-]?key|access[_-]?token|secret|token|key)[=:]\s*["']?([a-zA-Z0-9]{16,})["']?/gi,
-  NAMED_API_KEY: /(?:\w+[_-]?(?:api|token|key))\s*[=:]\s*["']?([a-zA-Z0-9-_=+/]{8,})["']?/gi,
+  NAMED_API_KEY: /\w+(?:[_-]?(?:api|key|token|secret))(?:\s*[=:]\s*|\s*=\s*|\s+=\s*)["']?([a-zA-Z0-9_.-]{8,})["']?/gi,
   SQL_QUERY: /SELECT.+FROM.+WHERE|INSERT INTO.+VALUES|UPDATE.+SET.+WHERE|DELETE FROM.+WHERE/gi,
   SQL_INJECTION: /((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/gi,
   CREDENTIAL: /(?:password|passwd|pwd|secret)[=:]\s*["']?([a-zA-Z0-9!@#$%^&*()_+]{8,})["']?/gi,
